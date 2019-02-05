@@ -1,0 +1,18 @@
+{
+  "name": "pure-kube",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "output"
+  ],
+  "dependencies": {
+    "purescript-prelude": "^4.1.0",
+    "purescript-console": "^4.2.0",
+    "purescript-node-readline-aff": "https://github.com/aravindgopall/purescript-node-readline-aff.git#543ad7b3f9c905d432fc317b19c09e1313e54b37",
+    "purescript-effect": "^2.0.1"
+  },
+  "devDependencies": {
+    "purescript-psci-support": "^4.0.0"
+  }
+}
