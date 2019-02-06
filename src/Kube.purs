@@ -6,18 +6,15 @@ module Kube where
 import Node.ReadLine.Aff
 
 import Data.Either (Either(..))
-import Data.Maybe (Maybe)
-import Data.Posix.Signal (Signal(..))
 import Effect (Effect)
 import Effect.Aff (Aff, makeAff, nonCanceler, throwError)
 import Effect.Class (liftEffect)
 import Effect.Console (log)
 import Effect.Exception (error)
-import Foreign.Object (Object)
 import Node.Buffer (toString)
-import Node.ChildProcess (defaultExecOptions, exec, kill)
+import Node.ChildProcess (defaultExecOptions, exec)
 import Node.Encoding (Encoding(..))
-import Prelude (Unit, bind, discard, pure, unit, ($), (*>), (<<<), (<>), (=<<), (>>=))
+import Prelude (Unit, discard, pure, ($), (*>), (<<<), (<>), (=<<))
 
 configHandle :: Interface -> Aff String 
 configHandle interface = question "Enter kubernetes config path" interface
@@ -44,7 +41,7 @@ showHelp interface = do
 
 executeCommand :: String -> String -> String -> Aff String
 executeCommand "GN" ns env = (\out -> liftEffect $ toString UTF8 out.stdout) =<< (makeAff (\cb -> exec ("export KUBECONFIG=" <> env <>" && kubectl get nodes -n " <> ns) defaultExecOptions (cb <<< Right) *> (pure nonCanceler)))
-executeCommand "GP" ns env = (\out -> liftEffect $ toString UTF8 out.stdout) =<< (makeAff (\cb -> exec ("kubectl get pods -n " <> ns) defaultExecOptions (cb <<< Right) *> (pure nonCanceler)))
+executeCommand "GP" ns env = (\out -> liftEffect $ toString UTF8 out.stdout) =<< (makeAff (\cb -> exec ("export KUBECONFIG=" <> env <>" && kubectl get pods -n " <> ns) defaultExecOptions (cb <<< Right) *> (pure nonCanceler)))
 executeCommand "CN" ns _ = throwError (error "Change Name Space")
 executeCommand "CC" ns _ = throwError (error "Change Kube Config")
 executeCommand _ ns _ = throwError (error "Unknow command")
